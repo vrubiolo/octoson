@@ -48,6 +48,7 @@ Edison normal Linux image or create an image from scratch using Yocto.
 
 ## Manual install
 Follow these steps to perform the installation:
+
 1. Flash Edison official image, downloaded from the [Intel website](https://software.intel.com/iot/hardware/edison/downloads). I am using iot-devkit-prof-dev-image-edison-20160606-patch.zip.
 1. configure_edison --setup
 1. useradd -d /home/octoson -m -U -G dialout octoson
@@ -64,6 +65,7 @@ administative tasks like restarting the OctoPrint server or the system itself.
 ## Using Yocto to rebuild an image
 This is the cleaner solution, so that the image can be tailored to OctoPrint, 
 with the unwanted parts removed but is is currently stuck on several issues:
+
 1. The Edison Yocto image is old and based on the Yocto daisy branch. This
 means it is not possible to use the latest version of certain packages because
 they depend on a newer version of the poky repository. An example of this is the
