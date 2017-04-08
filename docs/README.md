@@ -1,6 +1,6 @@
 # octoson - an introduction
 octoson = OctoPrint + Intel Edison
-<add links to images>
+<!--add links to images-->
 
 The Intel Edison using the mini-breakout board has a convenient form factor 
 which makes it very suitable for integration in the body of a 3D printer and
