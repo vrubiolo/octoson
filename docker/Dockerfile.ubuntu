@@ -1,0 +1,36 @@
+FROM ubuntu:trusty
+
+RUN apt-get update
+# From https://github.com/htot/meta-intel-edison
+#RUN sudo apt-get install gawk wget git-core diffstat unzip texinfo \
+#    gcc-multilib build-essential chrpath socat cpio python python3 \
+#    libsdl1.2-dev xterm python3
+
+# From https://software.intel.com/en-us/node/593591 along with failures from bitbake 
+# itself
+RUN sudo apt-get -y install build-essential git diffstat gawk chrpath \
+    texinfo libtool gcc-multilib python python3 wget locales
+
+# From https://wiki.yoctoproject.org/wiki/TipsAndTricks/ResolvingLocaleIssues
+RUN locale-gen en_US.UTF-8
+RUN update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+
+# Add user for the build, sharing local user IDs
+#RUN groupadd -g 100 user 
+RUN useradd -g 100 -u 4203 yocto
+
+# Create directory for mount point
+RUN mkdir /yocto
+
+# Become the yocto user and start under the mounted directory
+USER yocto
+WORKDIR /yocto
+
+# Workaround for https://github.com/gmacario/easy-build/issues/256
+ENV LC_ALL en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+
+# TODO: run oe-init-build-env automatically
+#CMD ["/bin/bash", "-c", "source ./oe-init-build-env"]
+CMD ["/bin/bash"]

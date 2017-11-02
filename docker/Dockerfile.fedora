@@ -21,4 +21,8 @@ USER yocto
 # Workaround for https://bugzilla.yoctoproject.org/show_bug.cgi?id=10165 based on
 # https://github.com/fedora-cloud/docker-brew-fedora/issues/14
 ENV LANG en_US.UTF-8
-CMD ["/bin/bash"]
+WORKDIR /yocto
+
+# TODO: run oe-init-build-env automatically
+#CMD ["/bin/bash", "-c", "source ./oe-init-build-env"]
+CMD ["/bin/bash", "-c", "source ./oe-init-build-env"]
