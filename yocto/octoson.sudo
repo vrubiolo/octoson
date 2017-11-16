@@ -1,7 +1,0 @@
-# When put under /etc/sudoers.d/, this allows
-# the octoson user to perform the below administrative
-# tasks on the system/from the OctoPrint UI
-octoson ALL=NOPASSWD: /bin/systemctl
-octoson ALL=NOPASSWD: /sbin/shutdown
-octoson ALL=NOPASSWD: /usr/bin/pip
-octoson ALL=NOPASSWD: /usr/bin/python
