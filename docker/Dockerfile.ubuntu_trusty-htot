@@ -8,6 +8,7 @@ RUN apt-get update
 
 # From https://software.intel.com/en-us/node/593591 along with failures from bitbake 
 # itself
+RUN sudo apt-get update
 RUN sudo apt-get -y install build-essential git diffstat gawk chrpath \
     texinfo libtool gcc-multilib python python3 wget locales
 
@@ -15,9 +16,11 @@ RUN sudo apt-get -y install build-essential git diffstat gawk chrpath \
 RUN locale-gen en_US.UTF-8
 RUN update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 
+#RUN groupadd -g 100 user
+#RUN useradd -g 100 -u 4203 yocto
 # Add user for the build, sharing local user IDs
-#RUN groupadd -g 100 user 
-RUN useradd -g 100 -u 4203 yocto
+RUN groupadd -g 1000 user 
+RUN useradd -g 1000 -u 1000 yocto
 
 # Create directory for mount point
 RUN mkdir /yocto
