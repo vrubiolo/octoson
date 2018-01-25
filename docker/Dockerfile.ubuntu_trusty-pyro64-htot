@@ -36,4 +36,5 @@ ENV LANGUAGE en_US.UTF-8
 
 # TODO: run oe-init-build-env automatically
 #CMD ["/bin/bash", "-c", "source ./oe-init-build-env"]
-CMD ["/bin/bash"]
+# CMD ["/bin/bash"]
+#ENTRYPOINT cd /yocto/out/linux64 && . poky/oe-init-build-env
