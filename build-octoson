@@ -1,0 +1,72 @@
+#!/bin/bash
+
+set -o errexit
+set -o xtrace
+
+script="${0##*/}"
+
+run_dir="/var/run/media/vincent/759f4f40-c49d-4a53-8136-f0b5fb9b68c2"
+
+print_date ()
+{
+    date -I
+}
+
+usage ()
+{
+    echo "Try $script --help for more information"
+}
+
+do_clone ()
+{
+    local dirname="$1"
+    local branch="$2"
+    cd $dirname
+    git clone https://github.com/htot/meta-intel-edison.git -b $branch
+    ln -s meta-intel-edison/utils/Makefile.mk Makefile
+}
+
+do_clone=1
+while [ "$#" -ne "0" ]; do
+    case $1 in
+        --work-dir)
+            shift
+            work_dir="$1"
+            ;;
+        --docker-dir)
+            # Can be omitted for now, as building the Docker container is not
+            # implemented by the script
+            shift
+            docker_dir="$1"
+            ;;
+        --no-clone)
+            do_clone=0
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            echo "Unknown argument $1!"
+            exit 1
+     esac
+     shift
+done
+
+docker_tag="vincent/ubuntu14-yocto:pyro64"
+
+base="htot-meta-intel-edison"
+branch="pyro64-acpi"
+if [[ -z "$work_dir" ]]; then
+    work_dir="$run_dir/${base}_${branch}_$(print_date)"
+fi
+
+if [[ ! -d "$work_dir" ]]; then
+    mkdir $work_dir
+fi
+if [[ "$do_clone" == 1 ]]; then
+    do_clone $work_dir $branch
+fi
+echo "Directory setup under $dirname"
+
+sudo docker run -i -t -v $work_dir:/yocto $docker_tag
