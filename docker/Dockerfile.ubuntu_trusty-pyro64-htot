@@ -1,16 +1,16 @@
 FROM ubuntu:trusty
 
-RUN apt-get update
 # From https://github.com/htot/meta-intel-edison
 #RUN sudo apt-get install gawk wget git-core diffstat unzip texinfo \
 #    gcc-multilib build-essential chrpath socat cpio python python3 \
 #    libsdl1.2-dev xterm python3
 
 # From https://software.intel.com/en-us/node/593591 along with failures from bitbake 
-# itself
-RUN sudo apt-get update
-RUN sudo apt-get -y install build-essential git diffstat gawk chrpath \
-    texinfo libtool gcc-multilib python python3 wget locales
+# itself, including linux-yocto build
+RUN sudo apt-get update && apt-get -y install build-essential git diffstat \
+    gawk chrpath texinfo libtool gcc-multilib python python3 wget locales \
+    libelf-dev libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # From https://wiki.yoctoproject.org/wiki/TipsAndTricks/ResolvingLocaleIssues
 RUN locale-gen en_US.UTF-8
