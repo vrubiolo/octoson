@@ -85,4 +85,4 @@ if [[ "$do_clone" == 1 ]]; then
 fi
 echo "Directory setup under $work_dir"
 
-sudo docker run -i -t -v $work_dir:/yocto $docker_tag
+sudo docker run -i -t -v $work_dir:/yocto:Z $docker_tag
