@@ -10,9 +10,13 @@ This project is about doing such a build, both hardware and software for a
 Printrbot Play.
 
 # Status
-As of 2017-01-03, the software side using the manual install is working, as is
-the Edison powered via a separate wall-wart via a soldered barrel jack. No
-enclosure is available.
+As of 2018-04-25: 
++ the software side using the manual install is working, but has not been tested
+  in a long time as the focus has shifted to building w/ Yocto.
++ the Edison powered via a separate wall-wart via a soldered barrel jack is
+  working.
++ the enclosure has been designed using [FreeCAD](http://www.freecadweb.org)
+  (see below).
 
 # Hardware
 The end goal is to have the Edison connected to the Play serial port using USB
@@ -21,9 +25,8 @@ wise, we will investigate both solutions of having the Edison using a dedicated
 power supply or the printer one.
 
 ## Enclosure
-We will use [this Thingiverse design](http://www.thingiverse.com/thing:578459)
-as the base for our case. We will need to remix it to make space of the barrel
-jack and the USB host adapter.
+I have designed an enclosure for the mini breakout board using
+[FreeCAD](http://www.freecadweb.org). It can be found either on [Thingiverse](https://www.thingiverse.com/thing:2521515) or [YouMagine](https://www.youmagine.com/designs/octoson-octoprint-on-the-intel-edison-case). It used magnets to hold onto the Play body.
 
 ## Power requirements
 It is mandatory to use the external power to have USB host working, one cannot 
@@ -46,8 +49,9 @@ chose for its compactness. The next step is to build a sleeker adapter by
 There are two ways to do it here: either manually install OctoPrint on the 
 Edison normal Linux image or create an image from scratch using Yocto.
 
-## Manual install
-Follow these steps to perform the installation:
+## Manual install (deprecated)
+Follow these steps to perform the installation. Note that these have not been
+used in a long time and might not work (which is why I am deprecating them)
 
 1. Flash Edison official image, downloaded from the [Intel website](https://software.intel.com/iot/hardware/edison/downloads). I am using iot-devkit-prof-dev-image-edison-20160606-patch.zip.
 1. configure_edison --setup
@@ -64,8 +68,9 @@ administative tasks like restarting the OctoPrint server or the system itself.
 
 ## Using Yocto to rebuild an image
 This is the cleaner solution, so that the image can be tailored to OctoPrint, 
-with the unwanted parts removed but is is currently stuck on several issues:
+with the unwanted parts removed.
 
+It used to be stuck on several issues:
 1. The Edison Yocto image is old and based on the Yocto daisy branch. This
 means it is not possible to use the latest version of certain packages because
 they depend on a newer version of the poky repository. An example of this is the
@@ -78,10 +83,16 @@ in the recipes archives have changed and now break. Some fixes need to be
 [manually applied](https://communities.intel.com/thread/109249) to the Bitbake
 recipes as a result.
 
-# Issues
-Software Yocto side currently stuck on the versioning issue (see above).
+Fortunately, the community is maintaining the edison tree and has rebased it to
+work over recent versions of Yocto. In particular, [Ferry
+Toth](https://github.com/htot) maintains a fully functional meta-intel-edison
+[here](https://github.com/htot/meta-intel-edison).  This is the solution I am
+using.
 
 # Credits
++ [Ferry Toth](https://github.com/htot) for maintaining the new
+  [meta-intel-edison](https://github.com/htot/meta-intel-edison) layer that
+allows Edison to have a currently working Yocto distro.
 + [logxen github gist](https://gist.github.com/logxen/ad195ccd31914bab8869) for
 the first draft of the manual installation instructions and showing me it was
 possible to do.
@@ -90,10 +101,8 @@ Yocto maintainers for the nice packaging bits and making all the hard integratio
 work.
 
 # TODOs
-+ Add reference to barrel jack part
-+ Add link to official Edison Yocto tarball
-+ Add pictures 
-+ Detail exact commands to disable system services and/or create script
++ Add reference to barrel jack part.
++ Add pictures of the installed setup.
 + Add more links to various sources.
 + Make Yocto image build work.
 + More testing, esp w.r.t bootup time and init order (it currently seems that
