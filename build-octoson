@@ -1,11 +1,13 @@
 #!/bin/bash
 
+# TODOs:
+# Add support for building Dockerfile. Current command is:
+# docker build . -f Dockerfile.ubuntu_trusty-pyro64-htot -t vincent/ubuntu14-yocto:pyro64
+
 set -o errexit
 set -o xtrace
 
 script="${0##*/}"
-
-run_dir="/var/run/media/vincent/759f4f40-c49d-4a53-8136-f0b5fb9b68c2"
 
 print_date ()
 {
@@ -29,9 +31,16 @@ do_clone ()
 do_clone=1
 while [ "$#" -ne "0" ]; do
     case $1 in
+        # Work dir allows to specify full path to working clone, when not
+        # recloning.
         --work-dir)
             shift
             work_dir="$1"
+            ;;
+        # Root dir is where repo should live after being cloned.
+        --root-dir)
+            shift
+            root_dir="$1"
             ;;
         --docker-dir)
             # Can be omitted for now, as building the Docker container is not
@@ -57,9 +66,16 @@ docker_tag="vincent/ubuntu14-yocto:pyro64"
 
 base="htot-meta-intel-edison"
 branch="pyro64-acpi"
-if [[ -z "$work_dir" ]]; then
-    work_dir="$run_dir/${base}_${branch}_$(print_date)"
+
+if [[ ! -z "$work_dir" && ! -z "$root_dir" ]]; then
+    echo "Cannot set both root and work dir"
+    exit 1
 fi
+
+if [[ -z "$work_dir" ]]; then
+    work_dir="$root_dir/${base}_${branch}_$(print_date)"
+fi
+work_dir="$(readlink -f $work_dir)"
 
 if [[ ! -d "$work_dir" ]]; then
     mkdir $work_dir
@@ -67,6 +83,6 @@ fi
 if [[ "$do_clone" == 1 ]]; then
     do_clone $work_dir $branch
 fi
-echo "Directory setup under $dirname"
+echo "Directory setup under $work_dir"
 
 sudo docker run -i -t -v $work_dir:/yocto $docker_tag
