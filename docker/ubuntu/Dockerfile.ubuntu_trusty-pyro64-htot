@@ -9,7 +9,7 @@ FROM ubuntu:trusty
 # itself, including linux-yocto build
 RUN sudo apt-get update && apt-get -y install build-essential git diffstat \
     gawk chrpath texinfo libtool gcc-multilib python python3 wget locales \
-    libelf-dev libssl-dev \
+    libelf-dev libssl-dev tmux \
     && rm -rf /var/lib/apt/lists/*
 
 # From https://wiki.yoctoproject.org/wiki/TipsAndTricks/ResolvingLocaleIssues
