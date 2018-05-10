@@ -72,12 +72,12 @@ while [ "$#" -ne "0" ]; do
      shift
 done
 
-docker_tag="vincent/ubuntu14-yocto:pyro64"
-
 base="htot-meta-intel-edison"
 if [[ -z "$branch" ]]; then
-    branch="pyro64-acpi"
+    branch="rocko64-acpi"
 fi
+# Docker image tag must match repo branch
+docker_tag="vincent/ubuntu14-yocto:$branch"
 
 if [[ ! -z "$work_dir" && ! -z "$root_dir" ]]; then
     echo "Cannot set both root and work dir"
@@ -98,4 +98,6 @@ if [[ "$do_clone" == 1 ]]; then
 fi
 echo "Directory setup under $work_dir"
 
-sudo docker run -i -t -v $work_dir:/yocto:Z $docker_tag
+# Use 'z' to correctly apply the SELinux labels inside the container. Mark is as
+# shareable.
+sudo docker run -i -t -v $work_dir:/yocto:z $docker_tag
